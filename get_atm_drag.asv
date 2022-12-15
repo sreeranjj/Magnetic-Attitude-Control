@@ -1,0 +1,27 @@
+function get_atm_drag(R_vec,V_vec,Rot_Mat)
+ global Re 
+ we = [0 ; 0;.000072921158553]; %rad/sec
+ n  = [  1, 0, 0;
+         0, 1, 0;
+         0, 0, 1;
+        -1, 0, 0;
+         0,-1, 0;
+         0, 0,-1]; 
+ S = 1/1000
+
+Vrel_ECI=V_vec+cross(we,R_vec);
+Vrel=Rot_Mat*Vrel_ECI;
+Cd=2;
+h=norm(R_vec)-Re;
+rho = get_density(h);
+
+for i=1:6
+    proj = n(i,:)*Vrel;
+    if(proj>0)
+        Drag = -rho*Cd*Vrel*S(i)*proj/2; 
+    else
+        Drag=0;
+    end
+    Drag_tot=Drag_tot+Drag;
+end
+end
